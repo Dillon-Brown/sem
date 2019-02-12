@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class Report {
 
-    private void worldPopulation() {
-
+    public int worldPopulation() {
+        return 1;
     }
 }

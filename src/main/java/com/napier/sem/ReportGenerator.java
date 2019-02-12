@@ -12,6 +12,7 @@ public class ReportGenerator {
     private JTextArea textOutput;
     private JComboBox reportType;
     private String reportText;
+
     /**
      * Generate the report.
      */
@@ -19,10 +20,18 @@ public class ReportGenerator {
         runReportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                reportText = (reportType.getSelectedItem().toString());
+                int selection = reportType.getSelectedIndex();
+                new Report();
 
-                if (reportText == "World Population"){
-
+                switch (selection) {
+                    case 0:
+                        JOptionPane.showMessageDialog(null, new Report().worldPopulation());
+                        break;
+                    case 1:
+                        JOptionPane.showMessageDialog(null, "you have selected option 2");
+                        break;
+                    default:
+                        break;
                 }
             }
         });
