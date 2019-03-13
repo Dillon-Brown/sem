@@ -6,13 +6,18 @@ import java.util.Scanner;
 
 public class App {
 
+    Connection con = null;
+    Database db = null;
+
     /**
      * Connect to database and run report.
      *
      * @param args string
      */
     public static void main(String[] args) {
-        DatabaseManager db = new DatabaseManager();
+        DatabaseFactory dbf = new DatabaseFactory();
+        Database db = dbf.create("mysql");
+        Connection con = db.con;
         App a = new App();
 
         // Connect to DB
@@ -175,8 +180,10 @@ public class App {
      */
     ArrayList<Country> worldCountriesByPopulationLS() {
         try {
-            DatabaseManager db = new DatabaseManager();
-            String query = "SELECT Name FROM country";
+            String query =
+                    "SELECT Name, Continent, Population "
+                            + "FROM country "
+                            + "ORDER BY Population DESC";
 
             ResultSet results = db.query(query);
             ArrayList<Country> countries = new ArrayList<Country>();
@@ -202,7 +209,6 @@ public class App {
      */
     ArrayList<Country> continentCountriesByPopulationLS(String continent) {
         try {
-            DatabaseManager db = new DatabaseManager();
             String[] continents = new String[]{"Asia", "Europe", "North America", "Africa", "Oceania", "Antarctica", "South America"};
             ArrayList<Country> countries = new ArrayList<Country>();
             for (String cont : continents) {
@@ -236,7 +242,6 @@ public class App {
      */
     ArrayList<Country> regionCountriesByPopulationLS(String region) {
         try {
-            DatabaseManager db = new DatabaseManager();
             ArrayList<Country> countries = new ArrayList<Country>();
             String query =
                     "SELECT Name, Continent, Population "

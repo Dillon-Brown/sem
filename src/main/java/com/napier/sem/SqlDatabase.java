@@ -1,21 +1,21 @@
 package com.napier.sem;
 
 import java.sql.*;
-import java.util.ArrayList;
 
-class DatabaseManager {
+public final class SqlDatabase implements Database {
 
     /**
      * Connection to MySQL database.
      */
-    private Connection con = null;
+    Connection con = null;
 
     /**
      * Connect to the MySQL database.
      *
      * @param location string
      */
-    void connect(String location) {
+    @Override
+    public void connect(String location) {
         try {
             // Load Database driver
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -28,9 +28,7 @@ class DatabaseManager {
         for (int i = 0; i < retries; ++i) {
             System.out.println("Connecting to database...");
             try {
-                // Wait a bit for db to start
                 Thread.sleep(30000);
-                // Connect to database
                 con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "mysql");
                 System.out.println("Successfully connected");
                 break;
@@ -39,6 +37,7 @@ class DatabaseManager {
                 System.out.println(sqle.getMessage());
             } catch (InterruptedException ie) {
                 System.out.println("Thread interrupted? Should not happen.");
+                Thread.currentThread().interrupt();
             }
         }
     }
@@ -46,10 +45,10 @@ class DatabaseManager {
     /**
      * Disconnect from the MySQL database.
      */
-    void disconnect() {
+    @Override
+    public void disconnect() {
         if (con != null) {
             try {
-                // Close connection
                 con.close();
             } catch (Exception e) {
                 System.out.println("Error closing connection to database");
@@ -62,7 +61,8 @@ class DatabaseManager {
      *
      * @param query string
      */
-    ResultSet query(String query) {
+    @Override
+    public ResultSet query(String query) {
         try {
             Statement stmt = con.createStatement();
             return stmt.executeQuery(query);
