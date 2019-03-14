@@ -35,13 +35,7 @@ public class App {
             e.printStackTrace();
             throw new IOException("Failed to create log file");
         }
-
-        try {
-            db.connect(location);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error connecting to database: ", e);
-            throw new SQLException(e.getMessage());
-        }
+        db.connect(location);
 
         app.menu();
 
