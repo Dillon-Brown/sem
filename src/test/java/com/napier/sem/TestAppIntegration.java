@@ -14,13 +14,7 @@ class TestAppIntegration {
     @BeforeAll
     static void init() throws SQLException {
         App app = new App();
-
-        try {
-            db.connect(location);
-        } catch (SQLException e) {
-            System.out.println("Error connecting to database");
-            throw new SQLException(e.getMessage());
-        }
+        db.connect(location);
     }
 
     @Test

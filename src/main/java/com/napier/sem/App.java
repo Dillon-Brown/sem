@@ -1,29 +1,45 @@
 package com.napier.sem;
 
+import com.napier.logger.LogHandler;
+
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class App {
 
-    static App app;
     static DatabaseFactory dbf = new DatabaseFactory();
     static Database db = dbf.create("mysql");
     static String location = "localhost:33060";
+
+    /**
+     * Logger
+     */
+    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     /**
      * Connect to database and run report.
      *
      * @param args string
      */
-    public void main(String[] args) throws SQLException {
+    public void main(String[] args) throws SQLException, IOException {
         App app = new App();
+
+        try {
+            LogHandler.setupLogger();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IOException("Failed to create log file");
+        }
 
         try {
             db.connect(location);
         } catch (SQLException e) {
-            System.out.println("Error connecting to database");
+            LOGGER.log(Level.SEVERE, "Error connecting to database: ", e);
             throw new SQLException(e.getMessage());
         }
 
@@ -32,7 +48,7 @@ public class App {
         try {
             db.disconnect();
         } catch (SQLException e) {
-            System.out.println("Error disconnecting from database");
+            LOGGER.log(Level.SEVERE, "Error disconnecting from database: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -88,8 +104,7 @@ public class App {
                 ArrayList<Country> worldCountries = this.worldCountriesByPopulationLS();
                 this.printCountries(worldCountries);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-                System.out.println("Failed to fetch country");
+                LOGGER.log(Level.SEVERE, "Failed to fetch country: ", e);
                 throw new SQLException(e.getMessage());
             }
         } else if (i == 2) {
@@ -100,8 +115,7 @@ public class App {
                 ArrayList<Country> continentCountries = this.continentCountriesByPopulationLS(continent);
                 this.printCountries(continentCountries);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-                System.out.println("Failed to fetch country");
+                LOGGER.log(Level.SEVERE, "Failed to fetch country: ", e);
                 throw new SQLException(e.getMessage());
             }
         } else if (i == 3) {
@@ -112,8 +126,7 @@ public class App {
                 ArrayList<Country> regionCountries = this.regionCountriesByPopulationLS(region);
                 this.printCountries(regionCountries);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-                System.out.println("Failed to fetch country");
+                LOGGER.log(Level.SEVERE, "Failed to fetch country: ", e);
                 throw new SQLException(e.getMessage());
             }
         }
@@ -219,8 +232,7 @@ public class App {
             }
             return countries;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("Failed to fetch country");
+            LOGGER.log(Level.SEVERE, "Failed to fetch country: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -251,8 +263,7 @@ public class App {
             }
             return countries;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("Failed to fetch country");
+            LOGGER.log(Level.SEVERE, "Failed to fetch country: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -284,8 +295,7 @@ public class App {
             }
             return countries;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("Failed to fetch country");
+            LOGGER.log(Level.SEVERE, "Failed to fetch country: ", e);
             throw new SQLException(e.getMessage());
         }
     }

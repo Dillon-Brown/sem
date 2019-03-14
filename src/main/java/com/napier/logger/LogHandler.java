@@ -11,7 +11,7 @@ public class LogHandler {
     private static final LogManager logManager = LogManager.getLogManager();
     private static final Logger LOGGER = Logger.getLogger(LogManager.class.getName());
 
-    public static void main(String[] args) throws IOException {
+    public static void setupLogger() throws IOException {
         FileHandler logFile;
         String logFileName = "./semLog.log";
         try {
