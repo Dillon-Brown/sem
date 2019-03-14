@@ -13,17 +13,12 @@ class TestAppIntegration {
 
     @BeforeAll
     static void init() throws SQLException {
-        App app = new App();
+        app = new App();
         db.connect(location);
     }
 
     @Test
     void worldCountriesByPopulationLS() throws SQLException {
-        try {
-            app.worldCountriesByPopulationLS();
-        } catch (SQLException e) {
-            System.out.println("Failed to fetch country");
-            throw new SQLException(e.getMessage());
-        }
+        app.worldCountriesByPopulationLS();
     }
 }
