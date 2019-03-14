@@ -7,25 +7,25 @@ public class City {
     /**
      * City ID
      */
-    public int ID;
+    public int id;
 
     /**
      * City Name
      */
-    public String Name;
+    public String name;
 
     /**
      * City CountryCode
      */
-    public String CountryCode;
+    public String countryCode;
 
     /**
      * City District
      */
-    public String District;
+    public String district;
 
     /**
      * City Population
      */
-    public int Population;
+    public int population;
 }

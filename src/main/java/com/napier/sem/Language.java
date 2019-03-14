@@ -1,26 +1,26 @@
 package com.napier.sem;
 
 /**
- * Represents a country language
+ * Represents a country language.
  */
 public class Language {
     /**
-     * Language CountryCode
+     * Language CountryCode.
      */
-    public String CountryCode;
+    public String countryCode;
 
     /**
-     * Language
+     * Country language.
      */
-    public String Language;
+    public String countryLanguage;
 
     /**
-     * Official Language
+     * Official Language.
      */
-    public Enum IsOfficial;
+    public Enum isOfficial;
 
     /**
-     * Language Percentage
+     * Language Percentage.
      */
-    public Float Percentage;
+    public Float percentage;
 }

@@ -35,21 +35,21 @@ class TestApp {
     void printCountriesTest() {
         ArrayList<Country> countries = new ArrayList<>();
         Country country = new Country();
-        country.Code = "ABW";
-        country.Name = "Aruba";
-        country.Continent = "North America";
-        country.Region = "Caribbean";
-        country.SurfaceArea = 193.00f;
-        country.IndepYear = 1;
-        country.Population = 103000;
-        country.LifeExpectancy = 78.4f;
-        country.GNP = 828.00f;
-        country.GNPOld = 793.00f;
-        country.LocalName = "Aruba";
-        country.GovernmentForm = "Nonmetropolitan Territory of The Netherlands";
-        country.HeadOfState = "Beatrix";
-        country.Capital = 129;
-        country.Code2 = "AW";
+        country.code = "ABW";
+        country.name = "Aruba";
+        country.continent = "North America";
+        country.region = "Caribbean";
+        country.surfaceArea = 193.00f;
+        country.indepYear = 1;
+        country.population = 103000;
+        country.lifeExpectancy = 78.4f;
+        country.gnp = 828.00f;
+        country.gnpOld = 793.00f;
+        country.localName = "Aruba";
+        country.governmentForm = "Nonmetropolitan Territory of The Netherlands";
+        country.headOfState = "Beatrix";
+        country.capital = 129;
+        country.code2 = "AW";
 
         countries.add(country);
         app.printCountries(countries);

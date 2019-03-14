@@ -1,43 +1,46 @@
 package com.napier.sem;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
 
-    Connection con = null;
-    Database db = null;
+    static App app;
+    static DatabaseFactory dbf = new DatabaseFactory();
+    static Database db = dbf.create("mysql");
+    static String location = "localhost:33060";
 
     /**
      * Connect to database and run report.
      *
      * @param args string
      */
-    public static void main(String[] args) {
-        DatabaseFactory dbf = new DatabaseFactory();
-        Database db = dbf.create("mysql");
-        Connection con = db.con;
-        App a = new App();
+    public void main(String[] args) throws SQLException {
+        App app = new App();
 
-        // Connect to DB
-        if (args.length < 1) {
-            db.connect("localhost:33060");
-        } else {
-            db.connect(args[0]);
+        try {
+            db.connect(location);
+        } catch (SQLException e) {
+            System.out.println("Error connecting to database");
+            throw new SQLException(e.getMessage());
         }
-        // Main report
-        a.menu();
 
-        // Disconnect DB
-        db.disconnect();
+        app.menu();
+
+        try {
+            db.disconnect();
+        } catch (SQLException e) {
+            System.out.println("Error disconnecting from database");
+            throw new SQLException(e.getMessage());
+        }
     }
 
     /**
      * Select a report menu
      */
-    private void menu() {
+    private void menu() throws SQLException {
         System.out.println("Select a function:");
         System.out.println("1 All the countries in the world organised by largest population to smallest.\n");
         System.out.println("2 All the countries in a continent organised by largest population to smallest.\n");
@@ -80,21 +83,39 @@ public class App {
         int i = input.nextInt();
 
         if (i == 1) {
-            System.out.println("All countries by population from largest to smallest:\n");
-            ArrayList<Country> worldCountries = this.worldCountriesByPopulationLS();
-            this.printCountries(worldCountries);
+            try {
+                System.out.println("All countries by population from largest to smallest:\n");
+                ArrayList<Country> worldCountries = this.worldCountriesByPopulationLS();
+                this.printCountries(worldCountries);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.out.println("Failed to fetch country");
+                throw new SQLException(e.getMessage());
+            }
         } else if (i == 2) {
-            System.out.println("Select a continent:");
-            String continent = input.next();
-            System.out.println("All the countries in a continent organised by largest population to smallest:\n");
-            ArrayList<Country> continentCountries = this.continentCountriesByPopulationLS(continent);
-            this.printCountries(continentCountries);
+            try {
+                System.out.println("Select a continent:");
+                String continent = input.next();
+                System.out.println("All the countries in a continent organised by largest population to smallest:\n");
+                ArrayList<Country> continentCountries = this.continentCountriesByPopulationLS(continent);
+                this.printCountries(continentCountries);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.out.println("Failed to fetch country");
+                throw new SQLException(e.getMessage());
+            }
         } else if (i == 3) {
-            System.out.println("Select a region:");
-            String region = input.next();
-            System.out.println("All the countries in a region organised by largest population to smallest.\n:\n");
-            ArrayList<Country> regionCountries = this.regionCountriesByPopulationLS(region);
-            this.printCountries(regionCountries);
+            try {
+                System.out.println("Select a region:");
+                String region = input.next();
+                System.out.println("All the countries in a region organised by largest population to smallest.\n:\n");
+                ArrayList<Country> regionCountries = this.regionCountriesByPopulationLS(region);
+                this.printCountries(regionCountries);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.out.println("Failed to fetch country");
+                throw new SQLException(e.getMessage());
+            }
         }
     }
 
@@ -110,10 +131,10 @@ public class App {
                 if (country == null) {
                     continue;
                 }
-                String formatted_string =
+                String formattedString =
                         String.format("%-10s %-15s %-20s",
-                                country.Name, country.Continent, country.Population);
-                System.out.println(formatted_string);
+                                country.name, country.continent, country.population);
+                System.out.println(formattedString);
             }
         } else {
             System.out.println("No countries");
@@ -177,9 +198,10 @@ public class App {
     /**
      * All the countries in the world organised by largest population to smallest.
      *
-     * @return countries
+     * @return countries ArrayList
+     * @throws SQLException string
      */
-    ArrayList<Country> worldCountriesByPopulationLS() {
+    ArrayList<Country> worldCountriesByPopulationLS() throws SQLException {
         try {
             String query =
                     "SELECT Name, Continent, Population "
@@ -187,63 +209,64 @@ public class App {
                             + "ORDER BY Population DESC";
 
             ResultSet results = db.query(query);
-            ArrayList<Country> countries = new ArrayList<Country>();
+            ArrayList<Country> countries = new ArrayList<>();
             while (results.next()) {
                 Country country = new Country();
-                country.Code = results.getString("Code");
-                country.Name = results.getString("Name");
-                country.Population = results.getInt("Population");
+                country.code = results.getString("Code");
+                country.name = results.getString("Name");
+                country.population = results.getInt("Population");
                 countries.add(country);
             }
             return countries;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("Failed to fetch country");
-            return null;
+            throw new SQLException(e.getMessage());
         }
     }
 
     /**
      * All the countries in a continent organised by largest population to smallest.
      *
-     * @return countries
+     * @param continent string
+     * @return countries ArrayList
+     * @throws SQLException string
      */
-    ArrayList<Country> continentCountriesByPopulationLS(String continent) {
+    ArrayList<Country> continentCountriesByPopulationLS(String continent) throws SQLException {
         try {
-            String[] continents = new String[]{"Asia", "Europe", "North America", "Africa", "Oceania", "Antarctica", "South America"};
-            ArrayList<Country> countries = new ArrayList<Country>();
-            for (String cont : continents) {
-                String query =
-                        "SELECT Name, Continent, Population "
-                                + "FROM country "
-                                + "WHERE Continent = '" + continent + "' "
-                                + "ORDER BY Population DESC  ";
-                ResultSet results = db.query(query);
-                while (results.next()) {
-                    Country country = new Country();
-                    country.Code = results.getString("Code");
-                    country.Name = results.getString("Name");
-                    country.Continent = results.getString("Continent");
-                    country.Population = results.getInt("Population");
-                    countries.add(country);
-                }
+            ArrayList<Country> countries = new ArrayList<>();
+            String query =
+                    "SELECT Name, Continent, Population "
+                            + "FROM country "
+                            + "WHERE Continent = '" + continent + "' "
+                            + "ORDER BY Population DESC  ";
+            ResultSet results = db.query(query);
+            while (results.next()) {
+                Country country = new Country();
+                country.code = results.getString("Code");
+                country.name = results.getString("Name");
+                country.continent = results.getString("Continent");
+                country.population = results.getInt("Population");
+                countries.add(country);
             }
             return countries;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("Failed to fetch country");
-            return null;
+            throw new SQLException(e.getMessage());
         }
     }
 
     /**
-     * All the countries in a region organised by largest population to smallest.
+     * All the countries in a region organised by largest population to smallest
      *
-     * @return countries
+     * @param region string
+     * @return countries ArrayList
+     * @throws SQLException string
      */
-    ArrayList<Country> regionCountriesByPopulationLS(String region) {
+    ArrayList<Country> regionCountriesByPopulationLS(String region) throws SQLException {
         try {
-            ArrayList<Country> countries = new ArrayList<Country>();
+            ArrayList<Country> countries = new ArrayList<>();
             String query =
                     "SELECT Name, Continent, Population "
                             + "FROM country "
@@ -252,18 +275,18 @@ public class App {
             ResultSet results = db.query(query);
             while (results.next()) {
                 Country country = new Country();
-                country.Code = results.getString("Code");
-                country.Name = results.getString("Name");
-                country.Continent = results.getString("Continent");
-                country.Region = results.getString("Region");
-                country.Population = results.getInt("Population");
+                country.code2 = results.getString("Code");
+                country.name = results.getString("Name");
+                country.continent = results.getString("Continent");
+                country.region = results.getString("Region");
+                country.population = results.getInt("Population");
                 countries.add(country);
             }
             return countries;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("Failed to fetch country");
-            return null;
+            throw new SQLException(e.getMessage());
         }
     }
 

@@ -7,75 +7,75 @@ public class Country {
     /**
      * Country Code
      */
-    public String Code;
+    public String code;
 
     /**
      * Country Name
      */
-    public String Name;
+    public String name;
 
     /**
      * Country Continent
      */
-    public String Continent;
+    public String continent;
 
     /**
      * Country Region
      */
-    public String Region;
+    public String region;
 
     /**
      * Country SurfaceArea
      */
-    public Float SurfaceArea;
+    public Float surfaceArea;
 
     /**
      * Country IndepYear
      */
-    public int IndepYear;
+    public int indepYear;
 
     /**
      * Country Population
      */
-    public int Population;
+    public int population;
 
     /**
      * Country LifeExpectancy
      */
-    public Float LifeExpectancy;
+    public Float lifeExpectancy;
 
     /**
      * Country GNP
      */
-    public Float GNP;
+    public Float gnp;
 
     /**
      * Country GNPOld
      */
-    public Float GNPOld;
+    public Float gnpOld;
 
     /**
      * Country LocalName
      */
-    public String LocalName;
+    public String localName;
 
     /**
      * Country GovernmentForm
      */
-    public String GovernmentForm;
+    public String governmentForm;
 
     /**
      * Country HeadOfState
      */
-    public String HeadOfState;
+    public String headOfState;
 
     /**
      * Country Capital
      */
-    public int Capital;
+    public int capital;
 
     /**
      * Country Code2
      */
-    public String Code2;
+    public String code2;
 }

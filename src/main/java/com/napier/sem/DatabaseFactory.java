@@ -1,5 +1,8 @@
 package com.napier.sem;
 
+/**
+ * Database factory for creating different types of databases.
+ */
 class DatabaseFactory {
 
     /**
@@ -9,11 +12,10 @@ class DatabaseFactory {
      * @return class
      */
     Database create(String type) {
-        switch (type) {
-            case "mysql":
-                return new SqlDatabase();
-            default:
-                throw new IllegalArgumentException();
+        if (type.equals("mysql")) {
+            return new SqlDatabase();
+        } else {
+            throw new IllegalArgumentException();
         }
     }
 }

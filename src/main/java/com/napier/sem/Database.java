@@ -1,18 +1,15 @@
 package com.napier.sem;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public interface Database {
 
-    /**
-     * Connection to MySQL database.
-     */
-    Connection con = null;
+    void connect(String location) throws SQLException;
 
-    void connect(String location);
+    void disconnect() throws SQLException;
 
-    void disconnect();
+    boolean isOpened();
 
-    ResultSet query(String query);
+    ResultSet query(String query) throws SQLException;
 }
